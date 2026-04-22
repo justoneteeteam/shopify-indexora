@@ -1,0 +1,22 @@
+api_version = "2026-07"
+uid = "eff7c366-7ec4-527c-5674-1f93c7fe966caf8a3c55"
+
+[[extensions]]
+type = "web_pixel"
+name = "Indexora AI Revenue Tracker"
+handle = "indexora-pixel"
+runtime_context = "strict"
+
+  [extensions.customer_privacy]
+  analytics = true
+  marketing = false
+  preferences = false
+  sale_of_data = "disabled"
+
+  [extensions.settings]
+  type = "object"
+
+    [extensions.settings.fields.trackingEnabled]
+    name = "trackingEnabled"
+    description = "Enable AI revenue tracking"
+    type = "single_line_text_field"

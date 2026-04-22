@@ -1,0 +1,57 @@
+<script>
+(function() {
+  var AI_REFERRERS = {
+    'chatgpt.com': 'ChatGPT',
+    'chat.openai.com': 'ChatGPT',
+    'gemini.google.com': 'Gemini',
+    'perplexity.ai': 'Perplexity',
+    'copilot.microsoft.com': 'Copilot',
+    'claude.ai': 'Claude',
+    'you.com': 'You.com'
+  };
+
+  var referrer = document.referrer;
+  if (!referrer) return;
+
+  var domains = Object.keys(AI_REFERRERS);
+  var matchedDomain = null;
+  for (var i = 0; i < domains.length; i++) {
+    if (referrer.indexOf(domains[i]) !== -1) {
+      matchedDomain = domains[i];
+      break;
+    }
+  }
+  if (!matchedDomain) return;
+
+  var platform = AI_REFERRERS[matchedDomain];
+
+  // Tag session for revenue attribution (Web Pixel reads this)
+  try {
+    sessionStorage.setItem('indexora_ai_ref', matchedDomain);
+    sessionStorage.setItem('indexora_ai_platform', platform);
+  } catch(e) {}
+
+  // Send beacon to Indexora backend via App Proxy
+  try {
+    fetch('/apps/indexora/track-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        referrer: matchedDomain,
+        platform: platform,
+        page: window.location.pathname,
+        timestamp: Date.now()
+      }),
+      keepalive: true
+    });
+  } catch(e) {}
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Indexora AI Tracker",
+  "target": "head",
+  "settings": []
+}
+{% endschema %}

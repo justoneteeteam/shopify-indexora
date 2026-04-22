@@ -1,0 +1,12 @@
+api_version = "2026-07"
+uid = "626c7544-80eb-f08d-fd12-1eeab59b0b3e6bfe61ff"
+
+[[extensions]]
+type = "theme"
+name = "Indexora AI Tracker"
+handle = "indexora-tracker"
+
+  [[extensions.blocks]]
+  type = "app-embed"
+  name = "indexora-tracker"
+  file = "blocks/tracker.liquid"

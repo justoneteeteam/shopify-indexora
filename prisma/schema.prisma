@@ -1,0 +1,143 @@
+// Indexora — Prisma Schema
+// ChatGPT and Gemini SEO Rank Booster
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.sqlite"
+}
+
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model Store {
+  id             String    @id @default(uuid())
+  shopifyDomain  String    @unique
+  storeName      String?
+  planTier       String    @default("free")
+  billingId      String?
+  trialUsed      Boolean   @default(false)
+  isActive       Boolean   @default(true)
+  onboardingDone Boolean   @default(false)
+  embedEnabled   Boolean   @default(false)
+  lastSync       DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  items          LlmItem[]
+  versions       LlmVersion[]
+  aiSessions     AiSession[]
+  aiConversions  AiConversion[]
+}
+
+model AiSession {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  referrer    String
+  platform    String
+  landingPage String
+  sessionId   String?
+  ipHash      String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([storeId])
+  @@index([createdAt])
+  @@index([platform])
+}
+
+model AiConversion {
+  id              String   @id @default(uuid())
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  shopifyOrderId  String
+  totalPrice      Float
+  currency        String   @default("USD")
+  referrer        String
+  platform        String
+  createdAt       DateTime @default(now())
+
+  @@unique([storeId, shopifyOrderId])
+  @@index([storeId])
+  @@index([createdAt])
+}
+
+model LlmItem {
+  id               String        @id @default(uuid())
+  storeId          String
+  store            Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  shopifyId        String
+  type             String
+  title            String
+  description      String?
+  shortDescription String?
+  bodyHtml         String?
+  featuredImageUrl String?
+  handle           String?
+  price            String?
+  stockStatus      String?
+  category         String?
+  tags             String?
+  seoTitle         String?
+  seoDescription   String?
+  trafficVolume    Int           @default(0)
+  revenueVolume    Float         @default(0)
+  readinessScore   Int           @default(0)
+  isOptimized      Boolean       @default(false)
+  lastUpdated      DateTime      @default(now())
+  createdAt        DateTime      @default(now())
+  metadata         LlmMetadata?
+
+  @@unique([storeId, shopifyId])
+  @@index([storeId])
+  @@index([type])
+  @@index([isOptimized])
+}
+
+model LlmMetadata {
+  id              String  @id @default(uuid())
+  itemId          String  @unique
+  item            LlmItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  titleLength     Int     @default(0)
+  descLength      Int     @default(0)
+  wordCount       Int     @default(0)
+  hasImage        Boolean @default(false)
+  hasSeoTitle     Boolean @default(false)
+  hasSeoDesc      Boolean @default(false)
+  hasCategory     Boolean @default(false)
+  hasTags         Boolean @default(false)
+}
+
+model LlmVersion {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  version     Int      @default(1)
+  format      String   @default("markdown")
+  content     String
+  itemCount   Int      @default(0)
+  fileSize    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([storeId])
+}
