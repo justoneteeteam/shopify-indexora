@@ -2,7 +2,7 @@
 
 client_id = "b0060ff47911f0c8ad5d1bc2a1f89720"
 name = "Indexora Chatgpt AI SEO"
-application_url = "https://example.com"
+application_url = "https://shopify-indexora-production.up.railway.app"
 embedded = true
 
 [webhooks]
@@ -33,9 +33,9 @@ api_version = "2026-07"
 scopes = "write_products,write_metaobjects,write_metaobject_definitions"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://shopify-indexora-production.up.railway.app/api/auth" ]
 
 [app_proxy]
 prefix = "apps"
 subpath = "indexora"
-url = "https://example.com/app-proxy"
+url = "https://shopify-indexora-production.up.railway.app/app-proxy"
