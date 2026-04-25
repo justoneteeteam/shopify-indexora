@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b0060ff47911f0c8ad5d1bc2a1f89720"
+client_id = "51a28e5095d4c505753255c19332bc3f"
 name = "Indexora Chatgpt AI SEO"
 application_url = "https://shopify-indexora-production.up.railway.app"
 embedded = true
