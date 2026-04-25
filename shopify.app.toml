@@ -41,5 +41,5 @@ redirect_urls = [
 
 [app_proxy]
 prefix = "apps"
-subpath = "indexora"
+subpath = "indexora-chatgpt-seo"
 url = "https://shopify-indexora-production.up.railway.app/app-proxy"
